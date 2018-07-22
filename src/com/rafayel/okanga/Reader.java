@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.io.FileReader;
 
-public class FileOpener {
+public class Reader {
     public static List<String> readFile(String filename)
     {
         List<String> records = new ArrayList<String>();
@@ -27,5 +27,11 @@ public class FileOpener {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static List<String> readString(String string){
+        List<String> records = new ArrayList<String>();
+        records.addAll(Arrays.asList(string.split(";")));
+        return records;
     }
 }

@@ -6,13 +6,18 @@ import java.util.Hashtable;
 public class Values {
     private static ArrayList<String> Tokens;
     private static Hashtable<String, String[]> Variables;
+    private static Hashtable<String, Function> Functions;
     Values(){
         Tokens = new ArrayList<>();
         Variables = new Hashtable<>();
+        Functions = new Hashtable<>();
         Tokens.add("if");
         Tokens.add("else");
         Tokens.add("elif");
-        Tokens.add("end");
+        Tokens.add("endif");
+        Tokens.add("def:");
+        Tokens.add("endef");
+        Tokens.add("call:");
         Tokens.add("screen:");
         Tokens.add("var:");
         Tokens.add("$");
@@ -21,15 +26,23 @@ public class Values {
         Tokens.add("convert:");
     }
 
-    public static ArrayList<String> getTokens(){
+    public ArrayList<String> getTokens(){
         return Tokens;
     }
 
-    public static void addVariable(String name, String[] value){
+    public void addFunction(String name, Function function){
+        Functions.put(name, function);
+    }
+
+    public Function getFunction(String name){
+        return Functions.get(name);
+    }
+
+    public void addVariable(String name, String[] value){
         Variables.put(name, value);
     }
 
-    public static String[] getVariable(String name){
+    public String[] getVariable(String name){
         return Variables.get(name);
     }
 }

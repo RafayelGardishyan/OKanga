@@ -91,7 +91,7 @@ public class Core {
         Scanner reader = new Scanner(System.in);
         System.out.print(">> " + parseVar(values, text, 0)[1]);
         new_values.addVariable(varname, parseVar(new_values, "\"" + reader.next() + "\"", 0));
-        reader.close();
+//        reader.close();
         return new_values;
     }
 
@@ -177,5 +177,22 @@ public class Core {
         }
 
         return new_values;
+    }
+
+    public static String getDefName(Values values, String string, int i) {
+        String name = "";
+        for (int j = i; j<string.length(); j++){
+            name += string.charAt(j);
+        }
+        return name;
+    }
+
+    public static Values runFunction(Values values, String string, int i) {
+        String name = "";
+        for (int j = i; j<string.length(); j++){
+            name += string.charAt(j);
+        }
+
+        return values.getFunction(name).run(values);
     }
 }
