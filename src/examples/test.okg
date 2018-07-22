@@ -1,0 +1,48 @@
+// This is a comment;
+
+// This is how you declare a variable;
+var: x = 12;
+var: y = "String variable";
+
+// This is how you reassign a variable;
+$x = 13;
+$y = true; // This is an example of a boolean;
+
+// This are examples of a print function:;
+screen: "Hello World";
+screen: 13;
+screen: $y;
+
+// This are null type variables;
+var: n1 = null;
+var: n2 = ;
+
+screen: "n1 and n2 are nulls:";
+screen: $n1;
+screen: $n2;
+
+// This is how you get string input from users
+input: x, "Enter a number: "; //Here is x the variable where the input is stored in and "Enter a number: " the prompt text;
+
+// Print the entered number;
+screen: "You entered this number:"
+screen: $x;
+screen: line;
+
+// Convert the variable type (if is is possible) to the type on the right side (Works only with built in types );
+convert: $x - integer;
+
+// This is an example of an if/else statement;
+if ($x == 42); // The operators are: ==, != < and >;
+screen: "You know the answer, bro";
+else;
+if ($x < 42);
+screen: "Your number is smaller than 42";
+else;
+screen: "Your number is greater than 42"
+end;
+end;
+
+if ($x == false);
+screen: "Error not worked";
+end;
