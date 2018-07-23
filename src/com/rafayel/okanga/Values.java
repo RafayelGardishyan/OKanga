@@ -24,6 +24,7 @@ public class Values {
         Tokens.add("input:");
         Tokens.add("//");
         Tokens.add("convert:");
+        Tokens.add("import:");
     }
 
     public ArrayList<String> getTokens(){

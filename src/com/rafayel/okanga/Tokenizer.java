@@ -30,6 +30,12 @@ public class Tokenizer {
                     }
 
                     if (!recordingFunction) {
+                        if (temp.equals("import:")){
+                            String filename = Core.getFilename(values, string, i + 2)[1];
+                            List<String> file = Reader.readFile(filename);
+                            values = Tokenizer.parseTokens(file, values);
+                        }
+
                         if (temp.equals("def:")) {
                             functionBody = "";
                             defName = Core.getDefName(values, string, i + 2);

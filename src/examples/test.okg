@@ -39,15 +39,17 @@ elif ($x < 42);
 screen: "Your number is smaller than 42";
 else;
 screen: "Your number is greater than 42"
-end;
+endif;
 
 def: func;
 screen: "Function func is called";
 endef;
 
 call: func;
+call: func;
 
+import: importing.okg;
 
 if ($x == false);
 screen: "Error not worked";
-end;
+endif;

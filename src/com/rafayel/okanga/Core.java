@@ -195,4 +195,15 @@ public class Core {
 
         return values.getFunction(name).run(values);
     }
+
+    public static String[] getFilename(Values values, String string, int i) {
+        String[] name;
+        String rawname = "";
+        if (String.valueOf(string.charAt(i)).equals("$")) return parseVar(values, string, i);
+        for (int j = i; j<string.length(); j++){
+            rawname += string.charAt(j);
+        }
+        name = new String[]{"string", rawname};
+        return name;
+    }
 }
