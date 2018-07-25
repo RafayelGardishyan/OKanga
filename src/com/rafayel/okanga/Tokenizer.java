@@ -57,7 +57,7 @@ public class Tokenizer {
                             } else currentBlock.setIfState(false);
                             break;
                         }
-                        if (temp.equals("elif")) {
+                        if (temp.equals("elif")) { // && currentBlock.getSkipElse()
                             currentBlock.setIfState(Core.getIfValue(values, string, i + 2));
                             checkif(currentBlock);
                         }

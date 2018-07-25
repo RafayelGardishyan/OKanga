@@ -23,7 +23,10 @@ public class Function{
 
     public Values run(Values values, ArrayList<String[]> inputArguments){
         Hashtable<String, String[]> args = new Hashtable<>();
-        for (int i = 0; i < inputArguments.size(); i++){
+
+        if (inputArguments.size() !=  arguments.length) Errors.RaiseError(String.format("Function %s requires %d arguments but %d were given", this.name, arguments.length, inputArguments.size()));
+
+        for (int i = 0; i < inputArguments.size() && i < arguments.length; i++){
             args.put(arguments[i], inputArguments.get(i));
         }
         values.addFunctionArguments(this.name, args);

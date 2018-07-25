@@ -246,7 +246,8 @@ public class Core {
 
     public static String[] getDefArguments(Values values, String string, Integer i) {
         Integer action = 0;
-        String[] args = new String[10];
+        String[] endargs;
+        ArrayList<String> args = new ArrayList<>();
         Integer argindex = 0;
         String temp = "";
         for (Integer j = i; j<string.length(); j++){
@@ -254,7 +255,7 @@ public class Core {
             if (cc.equals("(")) {++action; continue;}
             if (action == 1) {
                 if (cc.equals(",") || cc.equals(")")){
-                    args[argindex] = temp;
+                    args.add(temp);
                     temp = "";
                     argindex++;
                 } else {
@@ -262,6 +263,11 @@ public class Core {
                 }
             }
         }
-        return args;
+        endargs = new String[args.size()];
+        for (Integer k = 0; k < args.size(); k++){
+            endargs[k] = args.get(k);
+        }
+
+        return endargs;
     }
 }
