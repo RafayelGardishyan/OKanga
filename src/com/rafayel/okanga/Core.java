@@ -1,17 +1,25 @@
 package com.rafayel.okanga;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class Core {
-    private static String[] parseVar(Values values, String var, int i){
+    private static String[] parseVar(Values values, String var, Integer i){
         Pattern r = Pattern.compile("(\\d+)");
         String variable = "";
         Boolean stringEnabled = false;
         Boolean bool = false;
         String type = "";
-        for (int j = i; j < var.length(); j++) {
+        for (Integer j = i; j < var.length(); j++) {
             if (Character.toString(var.charAt(j)).equals("$") && !stringEnabled) return getVar(values, var, j + 1);
+            if (Character.toString(var.charAt(j)).equals("!") && !stringEnabled) {
+                String name = "";
+                for (Integer k = j + 1; k < var.length(); k++){
+                    name += var.charAt(k);
+                }
+                return values.getFunctionArguments(values.getCurrentFunction()).get(name);
+            }
 
             if (var.charAt(j) == "\"".charAt(0)){
                 if (stringEnabled) {
@@ -48,24 +56,24 @@ public class Core {
         return new String[]{type, variable};
     }
 
-    public static Values screen(Values values, String string, int i){
+    public static Values screen(Values values, String string, Integer i){
         System.out.println(parseVar(values, string, i)[1]);
         return values;
     }
 
     private static String[] getVar(Values values, String string, Integer i){
         String name = "";
-        for (int j = i; j<string.length(); j++){
+        for (Integer j = i; j<string.length(); j++){
             name += Character.toString(string.charAt(j));
         }
         return values.getVariable(name);
     }
 
-    public static Values setVar(Values values, String string, int i) {
+    public static Values setVar(Values values, String string, Integer i) {
         Values new_values = values;
         String varname = "";
         Integer end_i = 0;
-        for (int j=i; j<string.length(); j++){
+        for (Integer j=i; j<string.length(); j++){
             String s = Character.toString(string.charAt(j));
             if (s.equals(" ")){end_i = j + 3; break;}
             varname += s;
@@ -74,17 +82,30 @@ public class Core {
         return new_values;
     }
 
-    public static Values getInput(Values values, String string, int i) {
+    public static Values setArgVar(Values values, String string, Integer i) {
+        Values new_values = values;
+        String varname = "";
+        Integer end_i = 0;
+        for (Integer j=i; j<string.length(); j++){
+            String s = Character.toString(string.charAt(j));
+            if (s.equals(" ")){end_i = j + 3; break;}
+            varname += s;
+        }
+        new_values.getFunctionArguments(new_values.getCurrentFunction()).put(varname, parseVar(new_values, string, end_i));
+        return new_values;
+    }
+
+    public static Values getInput(Values values, String string, Integer i) {
         Values new_values = values;
         String varname = "";
         String text = "";
         Integer end_i = 0;
-        for (int j=i; j<string.length(); j++){
+        for (Integer j=i; j<string.length(); j++){
             String s = Character.toString(string.charAt(j));
             if (s.equals(",")){end_i = j + 2; break;}
             varname += s;
         }
-        for (int j=end_i; j<string.length(); j++){
+        for (Integer j=end_i; j<string.length(); j++){
             String s = Character.toString(string.charAt(j));
             text += s;
         }
@@ -95,13 +116,13 @@ public class Core {
         return new_values;
     }
 
-    public static Boolean getIfValue(Values values, String string, int i) {
+    public static Boolean getIfValue(Values values, String string, Integer i) {
         Boolean state = true;
         Integer action = 0;
         String operator = "";
         String firstOperand = "";
         String secondOperand = "";
-        for (int j = i; j<string.length(); j++){
+        for (Integer j = i; j<string.length(); j++){
             String cc = Character.toString(string.charAt(j));
             if (cc.equals(")") || cc.equals("(")) continue;
             if (cc.equals(" ")) {action++; continue;}
@@ -139,12 +160,12 @@ public class Core {
         return state;
     }
 
-    public static Values convert(Values values, String string, int i) {
+    public static Values convert(Values values, String string, Integer i) {
         Values new_values = values;
         String varname = "";
         String toType = "";
         Integer action = 0;
-        for (int j = i; j<string.length(); j++){
+        for (Integer j = i; j<string.length(); j++){
             String cc = Character.toString(string.charAt(j));
             if (cc.equals(" ") || cc.equals("-")) {action++; continue;}
             if (action == 0) varname += cc;
@@ -179,31 +200,68 @@ public class Core {
         return new_values;
     }
 
-    public static String getDefName(Values values, String string, int i) {
+    public static String getDefName(Values values, String string, Integer i) {
         String name = "";
-        for (int j = i; j<string.length(); j++){
-            name += string.charAt(j);
+        for (Integer j = i; j<string.length(); j++){
+            String cc = Character.toString(string.charAt(j));
+            if (cc.equals("(")) {break;}
+            name += cc;
         }
         return name;
     }
 
-    public static Values runFunction(Values values, String string, int i) {
+    public static Values runFunction(Values values, String string, Integer i) {
         String name = "";
-        for (int j = i; j<string.length(); j++){
-            name += string.charAt(j);
-        }
+        Integer action = 0;
+        ArrayList<String[]> args = new ArrayList<>();
+        String temp = "";
+        for (Integer j = i; j<string.length(); j++){
+            String cc = Character.toString(string.charAt(j));
+            if (cc.equals("(")) {++action; continue;}
 
-        return values.getFunction(name).run(values);
+            if (action == 0) name += cc;
+            if (action == 1) {
+                if (cc.equals(",") || cc.equals(")")){
+                    args.add(parseVar(values, temp, 0));
+                    temp = "";
+                } else {
+                    temp += cc;
+                }
+            }
+        }
+        values.setCurrentFunction(name);
+        return values.getFunction(name).run(values, args);
     }
 
-    public static String[] getFilename(Values values, String string, int i) {
+    public static String[] getFilename(Values values, String string, Integer i) {
         String[] name;
         String rawname = "";
         if (String.valueOf(string.charAt(i)).equals("$")) return parseVar(values, string, i);
-        for (int j = i; j<string.length(); j++){
+        for (Integer j = i; j<string.length(); j++){
             rawname += string.charAt(j);
         }
         name = new String[]{"string", rawname};
         return name;
+    }
+
+    public static String[] getDefArguments(Values values, String string, Integer i) {
+        Integer action = 0;
+        String[] args = new String[10];
+        Integer argindex = 0;
+        String temp = "";
+        for (Integer j = i; j<string.length(); j++){
+            String cc = Character.toString(string.charAt(j));
+            if (cc.equals("(")) {++action; continue;}
+            if (action == 1) {
+                if (cc.equals(",") || cc.equals(")")){
+                    args[argindex] = temp;
+                    temp = "";
+                    argindex++;
+                } else {
+                    temp += cc;
+                }
+            }
+        }
+        return args;
     }
 }

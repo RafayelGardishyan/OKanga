@@ -10,6 +10,7 @@ public class Tokenizer {
         Boolean recordingFunction = false;
         String functionBody = "";
         String defName = "";
+        String[] functionArguments = new String[] {null};
         for (String string: fileOpenerOutput) {
             String temp = "";
             for (int i = 0; i < string.length(); i++) {
@@ -19,13 +20,12 @@ public class Tokenizer {
                 }
 
                 temp += string.charAt(i);
-
                 if (recordingFunction) functionBody += string.charAt(i);
 
                 if (Tokens.contains(temp)) {
                     if (temp.equals("endef")) {
                         recordingFunction = false;
-                        values.addFunction(defName, new Function(defName, functionBody));
+                        values.addFunction(defName, new Function(new FunctionProperties(defName, functionArguments, functionBody)));
                         break;
                     }
 
@@ -39,7 +39,9 @@ public class Tokenizer {
                         if (temp.equals("def:")) {
                             functionBody = "";
                             defName = Core.getDefName(values, string, i + 2);
-                            recordingFunction = true;}
+                            functionArguments = Core.getDefArguments(values, string, i + 2);
+                            recordingFunction = true;
+                        }
                         if (temp.equals("call:")) {values = Core.runFunction(values, string, i + 2);}
 
                         if (temp.equals("//")) break;
@@ -68,6 +70,7 @@ public class Tokenizer {
                             if (temp.equals("screen:")) values = Core.screen(values, string, i + 2);
                             if (temp.equals("var:")) values = Core.setVar(values, string, i + 2);
                             if (temp.equals("$")) values = Core.setVar(values, string, i + 1);
+                            if (temp.equals("!")) values = Core.setArgVar(values, string, i + 1);
                             if (temp.equals("input:")) values = Core.getInput(values, string, i + 2);
                             if (temp.equals("convert:")) values = Core.convert(values, string, i + 2);
                             break;
@@ -75,6 +78,7 @@ public class Tokenizer {
                     }
                 }
             }
+            functionBody += ";";
         }
         return values;
     }
