@@ -270,4 +270,51 @@ public class Core {
 
         return endargs;
     }
+
+    public static Values calculate(Values values, String string, int i) {
+        Values new_values = values;
+        Integer action = 0;
+        String operand_1 = "";
+        String operand_2 = "";
+        String operator = "";
+        String varname = "";
+        String type = "";
+
+        for (Integer j = i; j<string.length(); j++) {
+            String cc = Character.toString(string.charAt(j));
+            if (cc.equals(" ")) {++action; continue;}
+            if (cc.equals(",")) {action = 100; continue;}
+            if (action == 0){
+                operand_1 += cc;
+            }
+            if (action == 1){
+                operator += cc;
+            }
+            if (action == 2){
+                operand_2 += cc;
+            }
+            if (action == 100){
+                varname += cc;
+            }
+        }
+
+        String[] parsed1 = parseVar(values, operand_1, 0);
+        String[] parsed2 = parseVar(values, operand_2, 0);
+        if (parsed1[0].equals("boolean") && parsed2[0].equals("boolean")){Errors.RaiseError("Can not do operations with 2 booleans");}
+        if (parsed1[0].equals("null") || parsed2[0].equals("null")){Errors.RaiseError("Can not do operations with null");}
+        if (operator.equals("+")){
+            if (parsed1[0].equals("string") || parsed2[0].equals("string")) {
+                type = "string";
+                new_values.addVariable(varname, new String[]{type, parsed1[1] + parsed2[1]});
+            }
+            if (parsed1[0].equals("integer") && parsed2[0].equals("integer")){
+                type = "integer";
+                new_values.addVariable(varname, new String[]{type, String.valueOf(Integer.valueOf(parsed1[1]) + Integer.valueOf(parsed2[1]))});
+            }
+
+        }
+
+
+        return new_values;
+    }
 }

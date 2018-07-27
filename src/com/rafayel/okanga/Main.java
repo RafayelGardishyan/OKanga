@@ -5,7 +5,7 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        List<String> file = Reader.readFile("C:\\Users\\rgard\\OneDrive\\Documents\\oKanga\\test.okg");
-        Tokenizer.parseTokens(file, new Values());
+        List<String> file = Tokenizer.readFile("C:\\Users\\rgard\\OneDrive\\Documents\\oKanga\\test.okg");
+        Parser.parseTokens(file, new Values());
     }
 }

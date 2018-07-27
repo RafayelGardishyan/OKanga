@@ -10,7 +10,7 @@ screen: "Hello World";
 screen: 13;
 screen: $y;
 
-// This are null type variables;
+// These are null type variables;
 var: n1 = null;
 var: n2 = ;
 

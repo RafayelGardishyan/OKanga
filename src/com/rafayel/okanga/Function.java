@@ -1,7 +1,6 @@
 package com.rafayel.okanga;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -18,7 +17,7 @@ public class Function{
     }
 
     private void tokenizeCode(){
-        this.tokenizedCode = Reader.readString(this.code);
+        this.tokenizedCode = Tokenizer.readString(this.code);
     }
 
     public Values run(Values values, ArrayList<String[]> inputArguments){
@@ -31,7 +30,7 @@ public class Function{
         }
         values.addFunctionArguments(this.name, args);
         tokenizeCode();
-        Values new_values = Tokenizer.parseTokens(this.tokenizedCode, values);
+        Values new_values = Parser.parseTokens(this.tokenizedCode, values);
         new_values.deleteLastFunction();
         return new_values;
     }

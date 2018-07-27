@@ -12,6 +12,16 @@ public class Block {
     private Boolean skipElse = true;
     private Boolean inElse = false;
 
+    public Boolean getExecuted() {
+        return executed;
+    }
+
+    public void setExecuted(Boolean executed) {
+        this.executed = executed;
+    }
+
+    private Boolean executed = false;
+
     public Boolean getInElse() {
         return inElse;
     }
